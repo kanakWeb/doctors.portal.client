@@ -1,12 +1,19 @@
 import React from "react";
 import chair from "../../assets/images/chair.png";
 import backgroundImg from "../../assets/images/bg.png";
+import PrimaryButton from "../Shared/PrimaryButton";
 
 const Banner = () => {
   return (
-    <div class="hero min-h-screen ">
-      <div class="hero-content px-12 flex-col lg:flex-row-reverse">
-        <img src={chair} class="max-w-sm rounded-lg shadow-2xl"/>
+    <div
+      style={{
+        background: `url(${backgroundImg})`,
+        backgroundSize: "cover",
+      }}
+      class="hero min-h-screen "
+    >
+      <div class="hero-content  flex-col lg:flex-row-reverse">
+        <img src={chair} class="max-w-sm rounded-lg shadow-2xl" />
         <div>
           <h1 class="text-5xl font-bold">
             Your New Smile Starts here!
@@ -16,9 +23,7 @@ const Banner = () => {
             typesetting industry. Lorem Ipsum has been the industry's
             standard dummy text ever since the
           </p>
-          <button class="btn btn-primary text-uppercase font-bold bg-gradient-to-r from-secondary to-primary text-white">
-            Get Started
-          </button>
+          <PrimaryButton>Get Started</PrimaryButton>
         </div>
       </div>
     </div>
