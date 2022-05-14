@@ -1,14 +1,17 @@
 import { format } from "date-fns";
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import auth from "../../firebase.init";
 
-const BookingModal = ({ date, treatment,setTreatment }) => {
+const BookingModal = ({ date, treatment, setTreatment }) => {
+  const [user, loading, error] = useAuthState(auth);
+
   const { name, slots } = treatment;
 
   const handleBooking = (event) => {
     event.preventDefault();
-    const slot = event.target.slot.value;
-    console.log(slot);
-    setTreatment(null)
+
+    setTreatment(null);
   };
 
   return (
@@ -21,7 +24,7 @@ const BookingModal = ({ date, treatment,setTreatment }) => {
       <div className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <label
-            for="booking-model"
+            htmlFor="booking-model"
             className="btn btn-sm btn-circle absolute right-2 top-2"
           >
             ✕
@@ -29,7 +32,10 @@ const BookingModal = ({ date, treatment,setTreatment }) => {
           <h3 className="font-bold text-lg text-secondary">
             <p>Booking for : {name} </p>
           </h3>
-          <form onSubmit={handleBooking} className="grid grid-cols-1 gap-4 pt-4 justify-items-center">
+          <form
+            onSubmit={handleBooking}
+            className="grid grid-cols-1 gap-4 pt-4 justify-items-center"
+          >
             <input
               type="text"
               readOnly
@@ -40,28 +46,33 @@ const BookingModal = ({ date, treatment,setTreatment }) => {
               name="slot"
               className="select select-bordered w-full max-w-xs"
             >
-              {slots.map((slot) => (
-                <option value={slot}>{slot}</option>
+              {slots.map((slot,index) => (
+                <option key={index} value={slot}>{slot}</option>
               ))}
             </select>
 
             <input
               name="name"
               type="text"
-              placeholder="Full Name"
+              readOnly
+              value={user?.displayName || ''}
               className="input w-full input-bordered  max-w-xs"
             />
+
+            <input
+              name="email"
+              type="text"
+              readOnly
+              value={user?.email || ''}
+              className="input w-full input-bordered  max-w-xs"
+            />
+
             <input
               type="phone"
               placeholder="Phone Number"
               className="input w-full input-bordered  max-w-xs"
             />
-            <input
-              name="email"
-              type="text"
-              placeholder="Email Address"
-              className="input w-full input-bordered  max-w-xs"
-            />
+
             <input
               name="submit"
               type="submit"
