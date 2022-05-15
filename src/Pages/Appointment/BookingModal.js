@@ -2,16 +2,53 @@ import { format } from "date-fns";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
+import { toast } from "react-toastify";
 
-const BookingModal = ({ date, treatment, setTreatment }) => {
+
+const BookingModal = ({ date, treatment, setTreatment,refetch }) => {
   const [user, loading, error] = useAuthState(auth);
 
-  const { name, slots } = treatment;
+  const { _id, name, slots } = treatment;
+
+  const formattedDate = format(date, "PP");
 
   const handleBooking = (event) => {
     event.preventDefault();
+    const slot = event.target.slot.value;
+    console.log(slot);
+    const booking = {
+      treatmentId: _id,
+      treatment: name,
+      date: formattedDate,
+      slot,
+      patient: user.email,
+      patientName: user.displayName,
+      phone: event.target.phone.value
+    };
+    console.log(booking);
 
-    setTreatment(null);
+    fetch("http://localhost:5000/booking", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+      },
+      body: JSON.stringify(booking),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+
+        if(data.success){
+          toast(`Appointment is set,${formattedDate} at ${slot}`);
+          }
+          else{
+            toast.error(`You already have and appointment on,${data.booking?.date} at ${data?.booking?.slot}`);
+          }
+          refetch()
+          setTreatment(null);
+        
+      });
+    
   };
 
   return (
@@ -46,8 +83,10 @@ const BookingModal = ({ date, treatment, setTreatment }) => {
               name="slot"
               className="select select-bordered w-full max-w-xs"
             >
-              {slots.map((slot,index) => (
-                <option key={index} value={slot}>{slot}</option>
+              {slots.map((slot, index) => (
+                <option key={index} value={slot}>
+                  {slot}
+                </option>
               ))}
             </select>
 
@@ -55,7 +94,7 @@ const BookingModal = ({ date, treatment, setTreatment }) => {
               name="name"
               type="text"
               readOnly
-              value={user?.displayName || ''}
+              value={user?.displayName || ""}
               className="input w-full input-bordered  max-w-xs"
             />
 
@@ -63,12 +102,13 @@ const BookingModal = ({ date, treatment, setTreatment }) => {
               name="email"
               type="text"
               readOnly
-              value={user?.email || ''}
+              value={user?.email || ""}
               className="input w-full input-bordered  max-w-xs"
             />
 
             <input
               type="phone"
+              name='phone'
               placeholder="Phone Number"
               className="input w-full input-bordered  max-w-xs"
             />

@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import auth from "../../firebase.init";
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   useSignInWithEmailAndPassword,
   useSignInWithGoogle,
@@ -22,26 +22,31 @@ const Login = () => {
     useSignInWithEmailAndPassword(auth);
 
   let signInError;
-  const navigate=useNavigate()
-  const location=useLocation()
+  const navigate = useNavigate();
+  const location = useLocation();
 
   let from = location.state?.from?.pathname || "/";
+
+  useEffect(() => {
+    if (user || gUser) {
+      navigate(from, { replace: true });
+    }
+  }, [user, gUser, navigate, from]);
 
   if (loading || gLoading) {
     return <Loading>Loading</Loading>;
   }
   if (error || gError) {
-    signInError = <p className="text-red-500"><small>{error?.message || gError?.message}</small></p>;
+    signInError = (
+      <p className="text-red-500">
+        <small>{error?.message || gError?.message}</small>
+      </p>
+    );
   }
 
-  if(user||gUser){
-    navigate(from, { replace: true });
-  }
-
-  const onSubmit =(data) => {
+  const onSubmit = (data) => {
     // console.log(data);
-   signInWithEmailAndPassword(data.email, data.password);
-   
+    signInWithEmailAndPassword(data.email, data.password);
   };
 
   return (
@@ -123,7 +128,14 @@ const Login = () => {
             />
           </form>
           {/* ................................... */}
-          <p><small>New to Doctors Portal.<Link className="text-secondary" to="/signup">Create New Account?</Link></small></p>
+          <p>
+            <small>
+              New to Doctors Portal.
+              <Link className="text-secondary" to="/signup">
+                Create New Account?
+              </Link>
+            </small>
+          </p>
           <div className="divider">OR</div>
           <button
             onClick={() => signInWithGoogle()}
