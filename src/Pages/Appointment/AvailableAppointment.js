@@ -10,23 +10,26 @@ const AvailableAppointment = ({ date }) => {
 
   // const [services, setService] = useState([]);
 
-
   const formattedDate = format(date, "PP");
 
-
-  const {data:services , isLoading,refetch} = useQuery(['available',formattedDate], () =>
-  fetch(`http://localhost:5000/available?date=${formattedDate}`)
-      .then((res) => res.json())
-)
+  const {
+    data: services,
+    isLoading,
+    refetch,
+  } = useQuery(["available", formattedDate], () =>
+    fetch(
+      `https://serene-plains-16566.herokuapp.com/available?date=${formattedDate}`
+    ).then((res) => res.json())
+  );
 
   /* useEffect(() => {
-    fetch(`http://localhost:5000/available?date=${formattedDate}`)
+    fetch(`https://serene-plains-16566.herokuapp.com/available?date=${formattedDate}`)
       .then((res) => res.json())
       .then((data) => setService(data));
   }, [formattedDate]); */
 
-  if(isLoading){
-    return <Loading></Loading>
+  if (isLoading) {
+    return <Loading></Loading>;
   }
 
   return (

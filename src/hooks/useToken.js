@@ -7,19 +7,22 @@ const useToken = (user) => {
     const currentUser = { email: email };
 
     if (email) {
-      fetch(`http://localhost:5000/user/${email}`, {
-        method: "PUT",
-        headers: {
-          "content-type": "application.json",
-        },
-        body: JSON.stringify(currentUser)
-      })
+      fetch(
+        `https://serene-plains-16566.herokuapp.com/user/${email}`,
+        {
+          method: "PUT",
+          headers: {
+            "content-type": "application.json",
+          },
+          body: JSON.stringify(currentUser),
+        }
+      )
         .then((res) => res.json())
         .then((data) => {
-          console.log('data inside use token',data);
-          const accessToken=data.token
-          localStorage.setItem("accessToken",accessToken)
-          setToken(accessToken)
+          console.log("data inside use token", data);
+          const accessToken = data.token;
+          localStorage.setItem("accessToken", accessToken);
+          setToken(accessToken);
         });
     }
   }, [user]);

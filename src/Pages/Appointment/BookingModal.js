@@ -4,8 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import auth from "../../firebase.init";
 import { toast } from "react-toastify";
 
-
-const BookingModal = ({ date, treatment, setTreatment,refetch }) => {
+const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
   const [user, loading, error] = useAuthState(auth);
 
   const { _id, name, slots } = treatment;
@@ -23,11 +22,11 @@ const BookingModal = ({ date, treatment, setTreatment,refetch }) => {
       slot,
       patient: user.email,
       patientName: user.displayName,
-      phone: event.target.phone.value
+      phone: event.target.phone.value,
     };
     console.log(booking);
 
-    fetch("http://localhost:5000/booking", {
+    fetch("https://serene-plains-16566.herokuapp.com/booking", {
       method: "POST",
       headers: {
         "content-type": "application/json",
@@ -38,17 +37,16 @@ const BookingModal = ({ date, treatment, setTreatment,refetch }) => {
       .then((data) => {
         console.log(data);
 
-        if(data.success){
+        if (data.success) {
           toast(`Appointment is set,${formattedDate} at ${slot}`);
-          }
-          else{
-            toast.error(`You already have and appointment on,${data.booking?.date} at ${data?.booking?.slot}`);
-          }
-          refetch()
-          setTreatment(null);
-        
+        } else {
+          toast.error(
+            `You already have and appointment on,${data.booking?.date} at ${data?.booking?.slot}`
+          );
+        }
+        refetch();
+        setTreatment(null);
       });
-    
   };
 
   return (
@@ -108,7 +106,7 @@ const BookingModal = ({ date, treatment, setTreatment,refetch }) => {
 
             <input
               type="phone"
-              name='phone'
+              name="phone"
               placeholder="Phone Number"
               className="input w-full input-bordered  max-w-xs"
             />

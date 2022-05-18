@@ -5,29 +5,31 @@ import { useNavigate } from "react-router-dom";
 import auth from "../../firebase.init";
 
 const MyAppointments = () => {
-  
-  const [user] = useAuthState(auth);
-  const navigate=useNavigate()
   const [appointments, setAppointments] = useState([]);
+
+  const [user] = useAuthState(auth);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (user) {
-      fetch(`http://localhost:5000/booking?patient=${user.email}`, {
-        method: "GET",
-        headers: {
-          authorization: `Bearer ${localStorage.getItem(
-            "accessToken"
-          )}`,
-        },
-      })
-        .then((res) =>{
-          
-           if(res.status===401 || res.status===403){
+      fetch(
+        `https://serene-plains-16566.herokuapp.com/booking?patient=${user.email}`,
+        {
+          method: "GET",
+          headers: {
+            authorization: `Bearer ${localStorage.getItem(
+              "accessToken"
+            )}`,
+          },
+        }
+      )
+        .then((res) => {
+          if (res.status === 401 || res.status === 403) {
             signOut(auth);
-            localStorage.removeItem('accessToken')
-             navigate('/')
-           }
-           return res.json();
+            localStorage.removeItem("accessToken");
+            navigate("/");
+          }
+          return res.json();
         })
         .then((data) => {
           setAppointments(data);
