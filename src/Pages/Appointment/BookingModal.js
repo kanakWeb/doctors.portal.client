@@ -26,7 +26,7 @@ const BookingModal = ({ date, treatment, setTreatment, refetch }) => {
     };
     console.log(booking);
 
-    fetch("https://serene-plains-16566.herokuapp.com/booking", {
+    fetch("http://localhost:5000/booking", {
       method: "POST",
       headers: {
         "content-type": "application/json",

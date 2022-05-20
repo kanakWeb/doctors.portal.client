@@ -32,7 +32,7 @@ const UserRow = ({ user, index, refetch }) => {
   };
   return (
     <tr key={user?._id}>
-      <th>{index + 1}</th>
+      <td>{index + 1}</td>
       <td>{email}</td>
       <td>
         {role !== "admin" ? (
